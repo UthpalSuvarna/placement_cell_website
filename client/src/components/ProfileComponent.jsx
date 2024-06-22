@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import supabase from "@/data/supabase";
+import { data } from "autoprefixer";
 
 const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
   const router = useRouter();
@@ -122,6 +123,7 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
   const [addingSkill, setAddingSkill] = useState(false);
   const [resumeLink, setResumeLink] = useState("");
   const [aadhaarLink, setAadhaarLink] = useState("");
+  // const [studentEmail, setStudentEmail] = useState(dataAll?.email);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -133,6 +135,7 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
         .from("student")
         .update({
           ...dataAll,
+          email: dataAll.email,
           resume_link: resumeLink,
           aadhaar_link: aadhaarLink,
         })
@@ -274,7 +277,36 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
               <p className="mb-[10px]">USN: {dataAll?.usn}</p>
               <p className="mb-[10px]">BRANCH: {dataAll?.branch}</p>
               <p className="mb-[10px]">YEAR: {dataAll?.year}</p>
-              <p className="mb-[10px]">Email: {dataAll?.email}</p>
+              {/* <p className="mb-[10px]">Email: {dataAll?.email}</p> */}
+
+              <div className="flex mb-[10px] items-center">
+                <div className="pr-3">
+                  <label className="block text-whitew-full mx-auto">
+                    Email:
+                  </label>
+                </div>
+                <div className="w-2/3">
+                  {editMode ? (
+                    <input
+                      type="text"
+                      placeholder={dataAll?.email}
+                      className="text-white bg-secondary-card rounded-md text-center"
+                      value={dataAll?.email}
+                      onChange={(e) =>
+                        setDataAll({ ...dataAll, email: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <input
+                      placeholder="Email"
+                      type="text"
+                      className="text-white bg-secondary-card rounded-md text-center placeholder:text-white"
+                      readOnly
+                      value={dataAll?.email}
+                    />
+                  )}
+                </div>
+              </div>
               <p className="mb-[10px]">Phone Number: {dataAll?.phone}</p>
             </div>
           </div>
@@ -331,10 +363,11 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
               {dataAll?.skills?.map((skill, index) => (
                 <div
                   key={index}
-                  className={`w-1/3 px-2 mb-4 text ${editMode && index === dataAll.skills.length - 1
-                    ? "w-1/4"
-                    : ""
-                    }`}
+                  className={`w-1/3 px-2 mb-4 text ${
+                    editMode && index === dataAll.skills.length - 1
+                      ? "w-1/4"
+                      : ""
+                  }`}
                 >
                   {editMode ? (
                     <div className="flex items-center">
@@ -463,8 +496,11 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
                 </button>
               ) : (
                 <button
-                  className={`${academics.verified === 1 ? "bg-gray-500 cursor-not-allowed" : "bg-logo-bg"
-                    } text-black font-bold px-4 py-2 rounded-md ml-2`}
+                  className={`${
+                    academics.verified === 1
+                      ? "bg-gray-500 cursor-not-allowed"
+                      : "bg-logo-bg"
+                  } text-black font-bold px-4 py-2 rounded-md ml-2`}
                   onClick={editMode ? handleSaveClick : handleEditClick}
                   disabled={academics.verified === 1} // Disable if verification status is 1
                 >
@@ -476,7 +512,6 @@ const ProfileComponent = ({ routePrefix, isVerify, onUidChange, student }) => {
         </div>
       </div>
     </div>
-
   );
 };
 
